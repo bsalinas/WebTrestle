@@ -21,8 +21,6 @@ boolean WiFlyHQTrestle::makePost(char* request, char* data){
 		_wifly->println();
 		_wifly->println(data);
 		_wifly->println();
-		Serial.print("freeMemory()=");
-    Serial.println(freeMemory());
 		return waitForResponse();
   	}
   return false;
