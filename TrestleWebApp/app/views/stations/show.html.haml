@@ -1,0 +1,18 @@
+%h1=@station.name
+%h2=@station.user
+%p=@station.description
+
+-@station.sensor.each do |sensor|
+	%h3= sensor.name
+	%h4= sensor.description
+	%table.table-striped
+		%thead
+			%tr
+				%th= "Value(#{sensor.units})"
+				%th Time
+		%tbody
+			-sensor.measurement.each do |measurement|
+				%tr
+					%td=measurement.value
+					%td=measurement.created_at
+
