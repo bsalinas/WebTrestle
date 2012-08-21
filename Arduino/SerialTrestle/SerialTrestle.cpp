@@ -1,9 +1,11 @@
 #include "SerialTrestle.h"
 
-SerialTrestle::SerialTrestle(char* site, int port, Stream* serial){
+SerialTrestle::SerialTrestle(char* station_identifier, char* site, int port, Stream* serial){
 	_site = site;
 	_port = port;
 	_serial = serial;
+	_biggestAction = -1;
+	strncpy(_stationIdentifier, station_identifier, MAX_LENGTH_STATION_IDENTIFIER);
 }
 
 boolean SerialTrestle::makePost(char* request, char* data){

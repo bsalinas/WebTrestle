@@ -8,7 +8,7 @@
 
 class SerialTrestle: public Trestle{
 public:
-	SerialTrestle(char* site, int port, Stream* serial);
+	SerialTrestle(char* station_identifier, char* site, int port, Stream* serial);
 protected:
 	char* _site; 
 	int _port;

@@ -1,5 +1,6 @@
 class SensorController < ApplicationController
 	def add
+		logger.info request.env
 		@station = Station.find_by_identifier(params[:station_identifier])
 		if !@station.nil?
 			@sensor = @station.sensor.find_by_identifier(params[:identifier])
@@ -12,12 +13,15 @@ class SensorController < ApplicationController
 			@sensor.units = params[:units]
 			@sensor.active = true
 			if @sensor.save
-				render :json => { :response => 'ok', :status => :ok}
+				render :json => { :response => 'ok'}
+				puts "A"
 			else
 				render :json => { :response => 'fail', :message => 'Couldn\'t create Sensor'}
+				puts "B"
 			end
 		else
 			render :json => {:response => 'fail', :message => 'Couldn\'t find Station'}
+			puts "C"
 		end
 	end
 end

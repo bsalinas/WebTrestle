@@ -6,7 +6,7 @@
 
 SoftwareSerial debugSerial(9,8);
 WiFly wifly;
-WiFlyHQTrestle bridge("192.168.1.18", 3000, &wifly);
+WiFlyHQTrestle bridge("Station1", "192.168.1.18", 3000, &wifly);
 
 /* Change these to match your WiFi network */
 const char mySSID[] = "MySSID";
@@ -21,23 +21,41 @@ void setup()
     
     setupWiFi();
 
-   //Register the station with an identifier, a name, a description, and whether old data should be overriden.
-   //This will create a web page for this station.
-   bridge.registerStation("Station1", "My Station Name", "My Station Description", false);
+   int response = bridge.registerStation("My Station Name", "My Station Description", false);
+   if(response < 0){
+    Serial.println("Error Creating Station");
+   }
    //Add our two sensors by passing the station identifier, an identifier for the sensor, the name, description, and units.
-   bridge.addSensor("Station1", "MyFirstSensor", "Time", "The time since startup", "Milliseconds");  
-   bridge.addSensor("Station1", "MySecondSensor", "Room Temperature", "This sensor measures temperature", "Celsius");
+   response = bridge.addSensor("MyFirstSensor", "Time", "The time since startup", "Milliseconds");  
+   if(response < 0){
+    Serial.println("Error adding sensor");
+   }
+   response = bridge.addSensor("MySecondSensor", "Room Temperature", "This sensor measures temperature", "Celsius");
+   if(response < 0){
+      Serial.println("Error adding sensor");
+   }
+   response = bridge.registerAction("My Action", "This action is cool", myAction);
+   if(response < 0){
+      Serial.println("Error registering Action");
+   }
+
+}
+
+void myAction(){
+  //This is called whenever the user clicks on the button on the website.
+  Serial.println("Cool!");
 }
 
 
 void loop()
 {
   if((millis()-lastTime) > 30000){
+    bridge.tick();
     //Only post every 30 seconds.
     lastTime = millis();
     //Send sensor data to the web page by passing the Station identifier, the sensor identifier, and int version of the value, and the number to divide by to return to a float.
-    bridge.sendSensorData("Station1", "MySecondSensor", int(1000.0*readTemperature()), 1000);      
-    bridge.sendSensorData("Station", "MyFirstSensor", int(millis()), 1); 
+    bridge.sendSensorData("MySecondSensor", int(1000.0*readTemperature()), 1000);      
+    bridge.sendSensorData("MyFirstSensor", int(millis()), 1); 
   }
 }
 

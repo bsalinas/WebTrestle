@@ -35,6 +35,7 @@ class HardwareActionController < ApplicationController
 		if !@station.nil?
 			@action = @station.hardware_action.find_by_identifier(params[:identifier])
 			if @action.nil?
+				#handle the case where this already exists gracefully?
 				@action = @station.hardware_action.create
 			end
 			@action.name = params[:name]

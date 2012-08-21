@@ -7,7 +7,7 @@ class MeasurementController < ApplicationController
 				value = Integer(params[:value])/Integer(params[:multiplier])
 				@measurement = @sensor.measurement.create(:value => value)
 				if @measurement.save
-					render :json => { :response => 'ok', :status => :ok}
+					render :json => { :response => 'ok'}
 				else
 					render :json => { :response => 'fail', :message => 'Couldn\'t create Measurement'}
 				end

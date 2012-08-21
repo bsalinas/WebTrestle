@@ -7,7 +7,7 @@
 
 class WiFlyHQTrestle: public Trestle{
 public:
-	WiFlyHQTrestle(char* site, int port, WiFly* wifly);
+	WiFlyHQTrestle(char* station_identifier,char* site, int port, WiFly* wifly);
 protected:
 	char* _site; 
 	int _port;
