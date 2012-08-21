@@ -15,12 +15,12 @@ Each variation of the Trestle library uses the same common commands but has a di
 ####Construction of the Trestle Object
 For SerialTrestle, construct a SerialTrestle object as follows
 ```c++
-SerialTrestle bridge("192.168.1.18", 3000, &Serial);
+SerialTrestle bridge("Station1", "192.168.1.18", 3000, &Serial);
 ```
-In this case, 192.168.1.18 is the web host, and 3000 is the port that it accepts communication over (Generally this will be 80, but the rails development configuration defaults to port 3000). `&Serial` provides a pointer to the Serial port that will be connected to the computer. This could be any of the standard hardware Serial ports or an insteance of a `SoftwareSerial` port.
+In this case, Station1 is an identifier for the station, 192.168.1.18 is the web host, and 3000 is the port that it accepts communication over (Generally this will be 80, but the rails development configuration defaults to port 3000). `&Serial` provides a pointer to the Serial port that will be connected to the computer. This could be any of the standard hardware Serial ports or an insteance of a `SoftwareSerial` port.
 For WiFlyHQTrestle, construct the Trestle object as follows
 ```c++
-WiFlyHQTrestle bridge("192.168.1.18", 3000, &wifly);
+WiFlyHQTrestle bridge("Station1", "192.168.1.18", 3000, &wifly);
 ```
 The host and the port are the same in this example. `&wifly` is a pointer to the WiFlyHQ object.
 ####Communication Setup
@@ -67,28 +67,28 @@ void setup(){
 ####Register a Station
 Registering a station (and the rest of the steps) are independent of what variety of Trestle you are using. In Trestle, every sensor is associated with a `Station`. To create a station call the registerStation function as follows:
 ```c++
-//Register the station with an identifier, a name, a description, and whether old data should be overriden.
-int result = bridge.registerStation("Station1", "My Station Name", "My Station Description", false);
+//Register the station with a name, a description, and whether old data should be overriden.
+int result = bridge.registerStation("My Station Name", "My Station Description", false);
 //If result > 0, then the station was successfully registered
 ```
-Station1, in this case, represents the identifier which will be used to associate sensors with the station. Once this command has been called, a website will be created for this station with the included name and description. The final argument should be `true` if any old data associated with this station (or any station with `Station1` as an identifier) should be destroyed.
+Once this command has been called, a website will be created for this station with the included name and description. The final argument should be `true` if any old data associated with this station (or any station with `Station1` as an identifier) should be destroyed.
 ####Add Sensors
 Once a station has been registered, sensors can be added to it. A single station may have multiple sensors associated with it. Each sensor, at creation, is given an identifier, a name, a description, and units using the following command
 ```c++
-//Add our two sensors by passing the station identifier, an identifier for the sensor, the name, description, and units.
-bridge.addSensor("Station1", "MyFirstSensor", "Time", "The time since startup", "Milliseconds");  
-bridge.addSensor("Station1", "MySecondSensor", "Room Temperature", "This sensor measures temperature", "Celsius");
+//Add our two sensors by passing an identifier for the sensor, the name, description, and units.
+bridge.addSensor("MyFirstSensor", "Time", "The time since startup", "Milliseconds");  
+bridge.addSensor("MySecondSensor", "Room Temperature", "This sensor measures temperature", "Celsius");
 ```
-In this case, we are associating two sensors with `Station1`. Each has their own name, description, and units in addition to an identifier which will be used to associate measurements with the sensor.
+Each has their own name, description, and units in addition to an identifier which will be used to associate measurements with the sensor.
 ####Send Sensor Data
 Data can be submitted to the web service once the sensors have been created.
 
 ```c++
-//Send sensor data to the web page by passing the Station identifier, the sensor identifier, and int version of the value, and the number to divide by to return to a float.
-bridge.sendSensorData("Station1", "MySecondSensor", int(1000.0*readTemperature()), 1000);      
-bridge.sendSensorData("Station1", "MyFirstSensor", int(millis()), 1); 
+//Send sensor data to the web page by passing the sensor identifier, and int version of the value, and the number to divide by to return to a float.
+bridge.sendSensorData("MySecondSensor", int(1000.0*readTemperature()), 1000);      
+bridge.sendSensorData("MyFirstSensor", int(millis()), 1); 
 ```
-The Station identifier, Sensor Identifier are sent along with the data. To allow for simple handling of floats, a multiplier can be specified. In the first case, we are multiplying our temperature by 1000 before submitting it as an integer. The server will then divide by 1000 before displaying the data.
+The Station Identifier declared above and the Sensor Identifier are sent along with the data. To allow for simple handling of floats, a multiplier can be specified. In the first case, we are multiplying our temperature by 1000 before submitting it as an integer. The server will then divide by 1000 before displaying the data.
 As data is submitted, it will appear on the website for the Station.
 
 
