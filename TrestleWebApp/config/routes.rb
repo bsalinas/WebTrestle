@@ -1,4 +1,10 @@
 HardwareInternetBridge::Application.routes.draw do
+  post "hardware_action/getPending"
+
+  get "hardware_action/forcePending"
+
+  post "hardware_action/add"
+
   resources :stations
 
   post "stations/register" 

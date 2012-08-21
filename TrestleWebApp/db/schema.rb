@@ -11,7 +11,19 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120814134047) do
+ActiveRecord::Schema.define(:version => 20120820222203) do
+
+  create_table "hardware_actions", :force => true do |t|
+    t.string   "name"
+    t.string   "description"
+    t.boolean  "pending"
+    t.integer  "station_id"
+    t.string   "identifier"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "hardware_actions", ["station_id"], :name => "index_hardware_actions_on_station_id"
 
   create_table "measurements", :force => true do |t|
     t.float    "value"

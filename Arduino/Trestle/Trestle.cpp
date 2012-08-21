@@ -35,5 +35,47 @@ int Trestle::evaluateResponse(){
 		return STATUS_SERVER_KNOWN_ERROR;
 	}
 	return STATUS_SUCCESS;
+}
 
+int Trestle::registerAction(char* station_identifier, int identifier, char* name, char* description, ActionFunctionPtr func){
+	if(identifier < NActions){
+		sprintf(_lastResponse, "station_identifier=%s&identifier=%i&name=%s&description=%s", station_identifier, identifier,name, description);
+		if(makePost("/hardware_action/add.json", _lastResponse)){
+			int resp =  evaluateResponse();
+			if(resp == STATUS_SUCCESS){
+				_functions[identifier] = func;
+			}
+			return resp;
+		}
+		return STATUS_POST_ERROR;
+	}
+	return STATUS_OUT_OF_BOUNDS_ERROR;
+}
+
+int Trestle::tick(char* station_identifier){
+	sprintf(_lastResponse, "station_identifier=%s", station_identifier);
+	if(makePost("/hardware_action/getPending.json", _lastResponse)){
+		int resp = evaluateResponse();
+		if(resp == STATUS_SUCCESS){
+			char* pch = strstr (_lastResponse,"\"action\":\"");	
+			if(pch != NULL){
+				int len = strcspn(pch+10, "\"");
+				strncpy(_lastResponse, pch+10, len);
+				_lastResponse[len]='\0';
+				if(atoi(_lastResponse) < NActions && atoi(_lastResponse)>=0){
+					_functions[atoi(_lastResponse)]();
+				}
+				else{
+					return STATUS_OUT_OF_BOUNDS_ERROR;
+				}
+			}
+			else{
+				return STATUS_SERVER_UNKNOWN_ERROR;
+			}
+		}
+		else{
+			return resp;
+		}
+	}
+	return STATUS_POST_ERROR;
 }

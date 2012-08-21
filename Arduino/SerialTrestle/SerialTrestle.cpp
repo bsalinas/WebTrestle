@@ -7,6 +7,7 @@ SerialTrestle::SerialTrestle(char* site, int port, Stream* serial){
 }
 
 boolean SerialTrestle::makePost(char* request, char* data){
+	_serial -> flush();
 	_serial->write(0x04);
 	_serial->print("http://");
 	_serial->print(_site);
@@ -22,7 +23,7 @@ boolean SerialTrestle::makePost(char* request, char* data){
 	return waitForResponse();
 }
 boolean SerialTrestle::waitForResponse(){
-	while(_serial->available() <0 ){
+	while(_serial->available() <=0 ){
 		delay(10);
 	}
 	int i=0;
@@ -30,6 +31,7 @@ boolean SerialTrestle::waitForResponse(){
 	while(_serial->available() > 0){
 		_lastResponse[i] = _serial->read();
 		i++;
+		delay(10);
 	}
 	_lastResponse[i]='\0';
 	return true;

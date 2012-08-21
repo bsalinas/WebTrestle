@@ -1,6 +1,8 @@
 %h1=@station.name
 %h2=@station.user
 %p=@station.description
+-@station.hardware_action.each do |action|
+	=link_to action.name, :controller=> :hardware_action, :action => :forcePending, :hardware_action => action
 
 -@station.sensor.each do |sensor|
 	%h3= sensor.name

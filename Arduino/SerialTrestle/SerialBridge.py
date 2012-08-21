@@ -43,4 +43,3 @@ while 1:
 		post(site, postRequest, postData)
 	else:
 		print val
-
