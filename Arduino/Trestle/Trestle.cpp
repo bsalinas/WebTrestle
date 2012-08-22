@@ -40,10 +40,10 @@ int Trestle::evaluateResponse(){
 	return STATUS_SUCCESS;
 }
 
-int Trestle::registerAction(char* name, char* description, ActionFunctionPtr func){
+int Trestle::registerAction(char* identifier, char* name, char* description, ActionFunctionPtr func){
 	_biggestAction++;
 	if(_biggestAction < NActions){
-		sprintf(_lastResponse, "station_identifier=%s&identifier=%i&name=%s&description=%s", _stationIdentifier, _biggestAction,name, description);
+		sprintf(_lastResponse, "station_identifier=%s&identifier=%s&name=%s&description=%s&hardware_id=%i", _stationIdentifier, identifier,name, description, _biggestAction);
 		if(makePost("/hardware_action/add.json", _lastResponse)){
 			int resp =  evaluateResponse();
 			if(resp == STATUS_SUCCESS){

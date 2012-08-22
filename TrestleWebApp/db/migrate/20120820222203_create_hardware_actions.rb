@@ -6,6 +6,7 @@ class CreateHardwareActions < ActiveRecord::Migration
       t.boolean :pending
       t.references :station
       t.string :identifier
+      t.integer :hardware_id
 
       t.timestamps
     end

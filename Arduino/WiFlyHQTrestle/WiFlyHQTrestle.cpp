@@ -37,6 +37,7 @@ boolean WiFlyHQTrestle::waitForResponse(){
 	_lastResponse[0]='\0';
 	while(_wifly->available() > 0){
 		char c = char(_wifly -> read());
+		//Wait until we get to the JSON bits.
 		if(c == '{'){
 			waiting = false;
 		}

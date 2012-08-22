@@ -3,9 +3,13 @@ HardwareInternetBridge::Application.routes.draw do
 
   get "hardware_action/forcePending"
 
+  post "hardware_action/performAction"
+
   post "hardware_action/add"
+  match "stations/:identifier" => 'stations#show' 
 
   resources :stations
+
 
   post "stations/register" 
   post "sensor/add"

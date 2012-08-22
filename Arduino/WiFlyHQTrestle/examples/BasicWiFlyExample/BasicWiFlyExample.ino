@@ -34,7 +34,7 @@ void setup()
    if(response < 0){
       Serial.println("Error adding sensor");
    }
-   response = bridge.registerAction("My Action", "This action is cool", myAction);
+   response = bridge.registerAction("ActionIdentifier","My Action", "This action is cool", myAction);
    if(response < 0){
       Serial.println("Error registering Action");
    }

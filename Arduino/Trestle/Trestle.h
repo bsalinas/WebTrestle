@@ -16,7 +16,7 @@ public:
 	int registerStation(char* name, char* description, boolean override);
 	int addSensor(char* identifier, char* name, char* description, char* units);
 	int sendSensorData(char* sensor_identifier, int value, int multiplier);
-	int registerAction(char* name, char* description, ActionFunctionPtr func);
+	int registerAction(char* identifier, char* name, char* description, ActionFunctionPtr func);
 	int tick();
 protected:
 	virtual boolean makePost(char* request, char* data);

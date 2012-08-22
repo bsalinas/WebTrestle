@@ -6,7 +6,7 @@ class HardwareActionController < ApplicationController
 			if !@action.nil?
 				@action.pending = false
 				@action.save
-				render :json => { :response => 'ok', :action => @action.identifier}
+				render :json => { :response => 'ok', :action => @action.hardware_id}
 			else
 				render :json => { :response => 'ok', :action => "-1"}
 			end
@@ -15,9 +15,31 @@ class HardwareActionController < ApplicationController
 		end
   end
 
+  #/hardware_action/performAction.json {station_identifier: STATION1, identifier: ACTION1}
+  def performAction
+  	@station = Station.find_by_identifier(params[:station_identifier])
+  	if !@station.nil?
+  		@action = @station.hardware_action.find_by_identifier(params[:identifier], :limit => 1)
+  		if !@action.nil?
+  			@action.pending = true
+  			if @action.save
+  				render :json => { :response => 'ok', :action => @action}
+  			else
+  				render :json => {:response => 'fail', :message => 'Couldn\'t save Action'}
+  			end
+  		else
+			render :json => {:response => 'fail', :message => 'Couldn\'t save Action'}
+		end
+  	else
+		render :json => {:response => 'fail', :message => 'Couldn\'t find Station'}
+  	end
+  			
+
+  end
+
+
   def forcePending
   	@hardware_action = HardwareAction.find(params[:hardware_action])
-  	puts 'abc'
   	puts @hardware_action.pending
   	@hardware_action.pending = true;
   	if(@hardware_action.save)
@@ -41,6 +63,7 @@ class HardwareActionController < ApplicationController
 			@action.name = params[:name]
 			@action.description = params[:description]
 			@action.identifier = params[:identifier]
+			@action.hardware_id = params[:hardware_id]
 			@action.pending = false
 			if @action.save
 				render :json => { :response => 'ok', :status => :ok}

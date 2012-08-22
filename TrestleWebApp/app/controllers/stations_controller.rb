@@ -21,7 +21,11 @@ class StationsController < ApplicationController
 
   end
   def show
-  	@station = Station.find(params[:id])
+    if params[:id]
+  	 @station = Station.find(params[:id])
+    else
+      @station = Station.find_by_identifier(params[:identifier])
+    end
   end
   def edit
 
