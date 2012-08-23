@@ -1,4 +1,10 @@
 HardwareInternetBridge::Application.routes.draw do
+  post "state/add"
+
+  post "state/setState"
+
+  post "state/getState"
+
   post "hardware_action/getPending"
 
   get "hardware_action/forcePending"
@@ -6,12 +12,13 @@ HardwareInternetBridge::Application.routes.draw do
   post "hardware_action/performAction"
 
   post "hardware_action/add"
+  post "stations/register" 
+  
   match "stations/:identifier" => 'stations#show' 
 
   resources :stations
 
 
-  post "stations/register" 
   post "sensor/add"
   post "measurement/add"
   devise_for :users

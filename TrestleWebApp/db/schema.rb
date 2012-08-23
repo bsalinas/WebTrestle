@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120820222203) do
+ActiveRecord::Schema.define(:version => 20120823193803) do
 
   create_table "hardware_actions", :force => true do |t|
     t.string   "name"
@@ -47,6 +47,18 @@ ActiveRecord::Schema.define(:version => 20120820222203) do
   end
 
   add_index "sensors", ["station_id"], :name => "index_sensors_on_station_id"
+
+  create_table "states", :force => true do |t|
+    t.string   "name"
+    t.string   "description"
+    t.integer  "station_id"
+    t.string   "current_state"
+    t.string   "identifier"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "states", ["station_id"], :name => "index_states_on_station_id"
 
   create_table "stations", :force => true do |t|
     t.string   "name"

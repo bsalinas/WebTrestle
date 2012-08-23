@@ -22,8 +22,10 @@ class StationsController < ApplicationController
   end
   def show
     if params[:id]
+      puts "Got ID"
   	 @station = Station.find(params[:id])
     else
+      puts "Got Identifier"
       @station = Station.find_by_identifier(params[:identifier])
     end
   end
@@ -39,9 +41,11 @@ class StationsController < ApplicationController
 
   end
 
-  #?identifier=IDENTIFIER&name=NAME&description=DESCRIPTION&override=TRUE|FALSE
   def register
+    puts params
+    puts "ABC"
   	@station = Station.find_by_identifier(params[:identifier])
+    puts params
   	if @station.nil?
   		createdIt = true
   		@station = Station.create({:identifier => params[:identifier], :name => params[:name], :description=>params[:description], :override => params[:override]})

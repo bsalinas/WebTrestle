@@ -6,7 +6,7 @@ class HardwareActionController < ApplicationController
 			if !@action.nil?
 				@action.pending = false
 				@action.save
-				render :json => { :response => 'ok', :action => @action.hardware_id}
+				render :json => { :response => 'ok', :action => @action.hardware_id.to_s}
 			else
 				render :json => { :response => 'ok', :action => "-1"}
 			end

@@ -1,6 +1,5 @@
 class SensorController < ApplicationController
 	def add
-		logger.info request.env
 		@station = Station.find_by_identifier(params[:station_identifier])
 		if !@station.nil?
 			@sensor = @station.sensor.find_by_identifier(params[:identifier])

@@ -1,9 +1,18 @@
 %h1=@station.name
 %h2=@station.user
 %p=@station.description
+%h2 States
+-if !@station.state.empty?
+	-@station.state.each do |state|
+		="#{state.name}(#{state.description})"
+		=state.current_state
+-else
+	No States Associated with this Station
+
+%h2 Actions
 -@station.hardware_action.each do |action|
 	=link_to action.name, :controller=> :hardware_action, :action => :forcePending, :hardware_action => action
-
+%h2 Sensors
 -@station.sensor.each do |sensor|
 	%h3= sensor.name
 	%h4= sensor.description
