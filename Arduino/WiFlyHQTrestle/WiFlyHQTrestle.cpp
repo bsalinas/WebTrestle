@@ -33,21 +33,38 @@ boolean WiFlyHQTrestle::waitForResponse(){
 		delay(10);
 	}
 	int i=0;
-	boolean waiting = true;
+	boolean waitingForJSON = true;
 	_lastResponse[0]='\0';
-	while(_wifly->available() > 0){
-		char c = char(_wifly -> read());
-		//Wait until we get to the JSON bits.
-		if(c == '{'){
-			waiting = false;
+	boolean done = false;
+	while(!done){
+		if(_wifly->available() > 0){
+			char c = char(_wifly -> read());
+			//Wait until we get to the JSON bits.
+			// Serial.print(c);
+			if(c == '{'){
+				waitingForJSON = false;
+			}
+		
+			if(!waitingForJSON){
+				_lastResponse[i] = c;
+				i++;
+				if(c=='}'){
+					done = true;
+					break;
+				}
+			// else{
+			// 	if(_wifly->available()<=0){
+			// 		Serial.println("delaying");
+			// 		waiting = true;
+			// 		delay(100);
+			// 	}
+			// 	else{
+			// 		Serial.println("more left");
+			// 	}
+			// }
+			}
 		}
-		if(_wifly->available() <= 0){
-			delay(100);
-		}
-		if(!waiting){
-			_lastResponse[i] = c;
-			i++;
-		}
+		
 	}
 	_lastResponse[i]='\0';
 	return true;
