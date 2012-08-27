@@ -72,7 +72,7 @@ int result = bridge.registerStation("My Station Name", "My Station Description",
 //If result > 0, then the station was successfully registered
 ```
 Once this command has been called, a website will be created for this station with the included name and description. The final argument should be `true` if any old data associated with this station (or any station with `Station1` as an identifier) should be destroyed.
-####Add Sensors
+####Sensors
 Once a station has been registered, sensors can be added to it. A single station may have multiple sensors associated with it. Each sensor, at creation, is given an identifier, a name, a description, and units using the following command
 ```c++
 //Add our two sensors by passing an identifier for the sensor, the name, description, and units.
@@ -80,7 +80,7 @@ bridge.addSensor("MyFirstSensor", "Time", "The time since startup", "Millisecond
 bridge.addSensor("MySecondSensor", "Room Temperature", "This sensor measures temperature", "Celsius");
 ```
 Each has their own name, description, and units in addition to an identifier which will be used to associate measurements with the sensor.
-####Send Sensor Data
+
 Data can be submitted to the web service once the sensors have been created.
 
 ```c++
@@ -90,6 +90,31 @@ bridge.sendSensorData("MyFirstSensor", int(millis()), 1);
 ```
 The Station Identifier declared above and the Sensor Identifier are sent along with the data. To allow for simple handling of floats, a multiplier can be specified. In the first case, we are multiplying our temperature by 1000 before submitting it as an integer. The server will then divide by 1000 before displaying the data.
 As data is submitted, it will appear on the website for the Station.
+
+####States
+A State is another way for the hardware to submit data to the website. Unlike with the Sensors, a State only has a single value at any given time (as opposed to a history of data values). To add a state, the following command is used
+```c++
+//Add a state to the website
+bridge.addState("State1", "State Name", "State Description");
+```
+Then, to update the value of the state, use the following command:
+```c++
+//Set the state
+bridge.setState("State1", "The Value to Set");
+```
+
+####Actions
+An action allows the user to trigger a behavior on the hardware from the website. One an action is registered, a link to trigger that action appears on the station page. Then, whenever that action is requested by the user, the method associated with the action will be called on the hardware.
+
+```c++
+bridge.registerAction("ActionIdentifier", "My Action", "This action is cool", myAction);
+...
+void myAction(){
+	Serial.println("Cool!");
+}
+```
+In this case, the Action has an Identifier, a name, a description and a method to execute when the action is performed.
+Each time you want the hardware to check if there is a new action to perform, you must call the tick() method. This can be placed in the loop, however it is not recommended to call this more than every 10 seconds or so.
 
 
 
