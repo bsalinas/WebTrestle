@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(:version => 20120823193803) do
     t.integer  "station_id"
     t.string   "identifier"
     t.integer  "hardware_id"
+    t.string   "message"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
   end

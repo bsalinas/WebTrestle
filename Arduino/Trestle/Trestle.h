@@ -10,7 +10,7 @@
 	const char add_state_string[] PROGMEM = "station_identifier=%s&identifier=%s&name=%s&description=%s";
 	const char set_state_string[] PROGMEM = "station_identifier=%s&identifier=%s&current_state=%s";
 
-typedef void (* ActionFunctionPtr) ();
+typedef void (* ActionFunctionPtr) (char*);
 #define NActions 3
 #define MAX_LENGTH_STATION_IDENTIFIER 32
 #define STATUS_SUCCESS 1

@@ -10,8 +10,13 @@
 	No States Associated with this Station
 
 %h2 Actions
+
 -@station.hardware_action.each do |action|
-	=link_to action.name, :controller=> :hardware_action, :action => :forcePending, :hardware_action => action
+	=form_tag({:controller => "hardware_action", :action => "forcePending"}, :method => "get") do
+		=label_tag(:message, "Message")
+		=text_field_tag(:message)
+		= hidden_field_tag(:hardware_action, action.id)
+		=submit_tag("Search")
 %h2 Sensors
 -@station.sensor.each do |sensor|
 	%h3= sensor.name

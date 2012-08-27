@@ -1,3 +1,5 @@
+#include <MemoryFree.h>
+
 
 
 #include <Trestle.h>
@@ -10,7 +12,9 @@ long lastTime = 0;
 void setup()
 {
     Serial.begin(9600);
+    Serial.println(freeMemory());
     initializeStationAndSensor();
+    Serial.println(freeMemory());
 
 }
 
@@ -34,14 +38,16 @@ void initializeStationAndSensor(){
    if(response < 0){
       Serial.println("Error registering Action");
    }
+   bridge.addState("State1", "A/C On", "Whether the Air Conditioner is On");
 
 }
 
-void myAction(){
+void myAction(char* message){
   //This is called whenever the user clicks on the button on the website.
   Serial.println("Cool!");
+  Serial.println(message);
 }
-
+boolean state = false;
 void loop()
 {
   if((millis()-lastTime) > 30000){
@@ -50,6 +56,13 @@ void loop()
     //Send sensor data to the web page by passing the Station identifier, the sensor identifier, and int version of the value, and the number to divide by to return to a float.
     bridge.sendSensorData("MySecondSensor", int(1000.0*readTemperature()), 1000);      
     bridge.sendSensorData("MyFirstSensor", int(millis()), 1); 
+    if(state){
+      bridge.setStateValue("State1", "On");
+      state = false;
+    } else{
+      bridge.setStateValue("State1", "Off");
+      state = true;
+    }
   }
 
 }
@@ -62,5 +75,4 @@ float readTemperature(){
  float B = 3892;
   return float( T1*B/log(R1/R2)  /  ( B/log(R1/R2) - T1 ))-273;
 }
-
 

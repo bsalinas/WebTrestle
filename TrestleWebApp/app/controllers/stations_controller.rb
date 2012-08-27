@@ -22,10 +22,8 @@ class StationsController < ApplicationController
   end
   def show
     if params[:id]
-      puts "Got ID"
   	 @station = Station.find(params[:id])
     else
-      puts "Got Identifier"
       @station = Station.find_by_identifier(params[:identifier])
     end
   end
@@ -42,8 +40,6 @@ class StationsController < ApplicationController
   end
 
   def register
-    puts params
-    puts "ABC"
   	@station = Station.find_by_identifier(params[:identifier])
     puts params
   	if @station.nil?

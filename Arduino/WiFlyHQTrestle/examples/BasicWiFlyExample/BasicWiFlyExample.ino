@@ -41,9 +41,10 @@ void setup()
 
 }
 
-void myAction(){
+void myAction(char* message){
   //This is called whenever the user clicks on the button on the website.
   Serial.println("Cool!");
+  Serial.println(message);
 }
 
 

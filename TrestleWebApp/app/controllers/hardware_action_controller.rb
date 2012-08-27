@@ -5,8 +5,10 @@ class HardwareActionController < ApplicationController
 			@action = @station.hardware_action.find_by_pending(true, :limit=>1)
 			if !@action.nil?
 				@action.pending = false
+				message = @action.message
+				@action.message = ""
 				@action.save
-				render :json => { :response => 'ok', :action => @action.hardware_id.to_s}
+				render :json => { :response => 'ok', :action => @action.hardware_id.to_s, :message => message}
 			else
 				render :json => { :response => 'ok', :action => "-1"}
 			end
@@ -15,20 +17,21 @@ class HardwareActionController < ApplicationController
 		end
   end
 
-  #/hardware_action/performAction.json {station_identifier: STATION1, identifier: ACTION1}
+  #/hardware_action/performAction.json {station_identifier: STATION1, identifier: ACTION1, message : MESSAGE}
   def performAction
   	@station = Station.find_by_identifier(params[:station_identifier])
   	if !@station.nil?
   		@action = @station.hardware_action.find_by_identifier(params[:identifier], :limit => 1)
   		if !@action.nil?
   			@action.pending = true
+  			@action.message = params[:message]
   			if @action.save
   				render :json => { :response => 'ok', :action => @action}
   			else
   				render :json => {:response => 'fail', :message => 'Couldn\'t save Action'}
   			end
   		else
-			render :json => {:response => 'fail', :message => 'Couldn\'t save Action'}
+			render :json => {:response => 'fail', :message => 'Couldn\'t find Action'}
 		end
   	else
 		render :json => {:response => 'fail', :message => 'Couldn\'t find Station'}
@@ -40,14 +43,10 @@ class HardwareActionController < ApplicationController
 
   def forcePending
   	@hardware_action = HardwareAction.find(params[:hardware_action])
-  	puts @hardware_action.pending
-  	@hardware_action.pending = true;
+  	@hardware_action.pending = true
+  	@hardware_action.message = params[:message]
   	if(@hardware_action.save)
-  		puts @hardware_action.pending
   		redirect_to @hardware_action.station
-  	else
-  		log.debug("ERROR")
-
   	end
   end
 

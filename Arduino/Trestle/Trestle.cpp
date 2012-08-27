@@ -86,10 +86,20 @@ int Trestle::tick(){
 			char* pch = strstr (_lastResponse,"\"action\":\"");	
 			if(pch != NULL){
 				int len = strcspn(pch+10, "\"");
-				strncpy(_lastResponse, pch+10, len);
-				_lastResponse[len]='\0';
-				if(atoi(_lastResponse) < NActions && atoi(_lastResponse)>=0 && atoi(_lastResponse) <= _biggestAction){
-					_functions[atoi(_lastResponse)]();
+				strncpy(_buffer, pch+10, len);
+				_buffer[len]='\0';
+				int funcId = atoi(_buffer);
+				char* pch = strstr (_lastResponse,"\"message\":\"");	
+				if(pch != NULL){
+					int len = strcspn(pch+11, "\"");
+					strncpy(_lastResponse, pch+11, len);
+					_lastResponse[len]='\0';
+				}
+				else{
+					_lastResponse[0]='\0';
+				}
+				if(funcId< NActions && funcId>=0 && funcId <= _biggestAction){
+					_functions[funcId](_lastResponse);
 				}
 				else{
 					return STATUS_OUT_OF_BOUNDS_ERROR;
