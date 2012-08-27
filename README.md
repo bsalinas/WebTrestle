@@ -109,8 +109,9 @@ An action allows the user to trigger a behavior on the hardware from the website
 ```c++
 bridge.registerAction("ActionIdentifier", "My Action", "This action is cool", myAction);
 ...
-void myAction(){
+void myAction(char* message){
 	Serial.println("Cool!");
+	Serial.println(message);
 }
 ```
 In this case, the Action has an Identifier, a name, a description and a method to execute when the action is performed.
