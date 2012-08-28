@@ -136,7 +136,17 @@ curl -d "station_identifier=Station1&identifier=ActionIdentifier&message=Hello W
 ```
 Sample response
 ```
-{"response":"ok","action":{"created_at":"2012-08-27T14:28:02Z","description":"This action is cool","hardware_id":0,"id":1,"identifier":"ActionIdentifier","message":"Hello World","name":"My Action","pending":true,"station_id":1,"updated_at":"2012-08-28T17:55:08Z"}}
+{"response":"ok","action":{
+	"created_at":"2012-08-27T14:28:02Z",
+	"description":"This action is cool",
+	"hardware_id":0,
+	"id":1,
+	"identifier":"ActionIdentifier",
+	"message":"Hello World",
+	"name":"My Action",
+	"pending":true,
+	"station_id":1,
+	"updated_at":"2012-08-28T17:55:08Z"}}
 ```
 ####Get State
 This will get the value of a state.
@@ -144,8 +154,12 @@ This will get the value of a state.
 POST state/getState.json 
 {station_identifier: "Station1", identifier: "State1"}
 ```
+An example using curl
+```
+curl -d "station_identifier=Station1&identifier=State1" localhost:3000/state/getState.json
+```
 The response will be
 ```
-{response:"ok", current_state: "StateValue", last_updated: ""}
+{"response":"ok","current_state":"StateValue","updated_at":"2012-08-28T17:59:58Z"}
 ```
 
