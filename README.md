@@ -126,7 +126,17 @@ Until there is a permanently hosted version of the web app, you must run your ow
 There are a few web services that are available so that other applications can interact with the app. Currently, only the following web services are available
 ####Perform Action
 ```
-POST hardware_action/performAction.json {station_identifier: "Station1", identifier: "Action1", message: "MessageToSend"}
+POST hardware_action/performAction.json 
+{station_identifier: "Station1", identifier: "Action1", message: "MessageToSend"}
 ```
 
+####Get State
+```
+POST state/getState.json 
+{station_identifier: "Station1", identifier: "State1"}
+```
+The response will be
+```
+{response:"ok", current_state: "StateValue"}
+```
 
