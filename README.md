@@ -128,9 +128,16 @@ There are a few web services that are available so that other applications can i
 This will cause the hardware to perform an action.
 ```
 POST hardware_action/performAction.json 
-{station_identifier: "Station1", identifier: "Action1", message: "MessageToSend"}
+{station_identifier: "Station1", identifier: "ActionIdentifier", message: "Hello World"}
 ```
-
+Sample Usage with Curl
+```
+curl -d "station_identifier=Station1&identifier=ActionIdentifier&message=Hello World" localhost:3000/hardware_action/performAction.json
+```
+Sample response
+```
+{"response":"ok","action":{"created_at":"2012-08-27T14:28:02Z","description":"This action is cool","hardware_id":0,"id":1,"identifier":"ActionIdentifier","message":"Hello World","name":"My Action","pending":true,"station_id":1,"updated_at":"2012-08-28T17:55:08Z"}}
+```
 ####Get State
 This will get the value of a state.
 ```
