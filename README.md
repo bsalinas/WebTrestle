@@ -127,36 +127,26 @@ There are a few web services that are available so that other applications can i
 ####Perform Action
 This will cause the hardware to perform an action.
 ```
-POST hardware_action/performAction.json 
+POST perform_action 
 {station_identifier: "Station1", identifier: "ActionIdentifier", message: "Hello World"}
 ```
 Sample Usage with Curl
 ```
-curl -d "station_identifier=Station1&identifier=ActionIdentifier&message=Hello World" localhost:3000/hardware_action/performAction.json
+curl -d "station_identifier=Station1&identifier=ActionIdentifier&message=Hello World" localhost:4567/perform_action
 ```
 Sample response
 ```
-{"response":"ok","action":{
-	"created_at":"2012-08-27T14:28:02Z",
-	"description":"This action is cool",
-	"hardware_id":0,
-	"id":1,
-	"identifier":"ActionIdentifier",
-	"message":"Hello World",
-	"name":"My Action",
-	"pending":true,
-	"station_id":1,
-	"updated_at":"2012-08-28T17:55:08Z"}}
+{"response":"ok"}
 ```
 ####Get State
 This will get the value of a state.
 ```
-POST state/getState.json 
+GET get_state
 {station_identifier: "Station1", identifier: "State1"}
 ```
 An example using curl
 ```
-curl -d "station_identifier=Station1&identifier=State1" localhost:3000/state/getState.json
+curl "localhost:4567/get_state?station_identifier=Station1&identifier=State1"
 ```
 The response will be
 ```
