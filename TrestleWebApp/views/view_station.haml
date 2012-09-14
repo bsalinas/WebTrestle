@@ -1,0 +1,58 @@
+%head
+	=include_gon
+	%script{:src=> "https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"}
+	%script{:src=>"/jquery-ui-1.8.23.custom.min.js"}
+	%script{:src => "/stations.js"}
+	%script{:src => "/d3.v2.js"}
+	%script{:src => "/nv.d3.min.js"}
+	%link(type="text/css" href="/jquery-ui-1.8.23.custom.css" rel="stylesheet")
+	%link(rel="stylesheet" href="/app.css")
+	%link(rel="stylesheet" href="/nv.d3.css")
+%body
+	%h1{:data=>{:station_identifier => "#{@station.identifier}"}}=@station.name
+	%p=@station.description
+	%h2 States
+	-if !@station.state.empty?
+		-@station.state.each do |state|
+			%div.state_display{:id=> "state_id_#{state.id}", :title=>"#{state.description}"}
+				="#{state.name}"
+				%div
+					=state.current_state
+	-else
+		No States Associated with this Station
+
+	%h2 Actions
+
+	-@station.hardware_action.each do |action|
+		%a.action_button{:href=>"#", :data=>{:action_identifier=>"#{action.identifier}"}}=action.name
+		%div.action_display{:id => "action_display_#{action.identifier}"}
+
+	%h2 Sensors
+	
+	-@station.sensor.each do |sensor|
+		%h3= sensor.name
+		%h4= sensor.description	
+		%div.tabs
+			%ul
+				%li 
+					%a{:href=>"#sensor_chart_#{sensor.id}"}
+					Chart
+				%li 
+					%a{:href=> "#table_#{sensor.id}"}
+					Table
+			%div.chart{:id => "sensor_chart_#{sensor.id}", :data=>{:sensor_id => "#{sensor.id}"}}
+				%svg
+			%div{:id=>"table_#{sensor.id}"}
+				%table.table-striped{:id => "sensor_table_#{sensor.id}"}
+					%thead
+						%tr
+							%th= "Value(#{sensor.units})"
+							%th Time
+					%tbody
+						-sensor.measurement.each do |measurement|
+							%tr.measurement_value{:id=> "measurement_#{measurement.id}", :data=> {:value => "#{measurement.value}", :time=> "#{measurement.created_at}"}}
+								%td=measurement.value
+								%td=measurement.created_at
+
+	
+

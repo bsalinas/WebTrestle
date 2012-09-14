@@ -1,0 +1,16 @@
+%h1 Stations
+%table.table-striped
+	%thead
+		%tr
+			%th Name
+			%th Description
+			%th Key
+	%tbody
+		-@stations.each do |s|
+			%tr
+				%td=s.name
+				%td=s.description
+				%td=s.identifier
+
+
+
