@@ -109,8 +109,9 @@ An action allows the user to trigger a behavior on the hardware from the website
 ```c++
 bridge.registerAction("ActionIdentifier", "My Action", "This action is cool", myAction);
 ...
-void myAction(){
+void myAction(char* message){
 	Serial.println("Cool!");
+	Serial.println(message);
 }
 ```
 In this case, the Action has an Identifier, a name, a description and a method to execute when the action is performed.
@@ -121,4 +122,44 @@ Each time you want the hardware to check if there is a new action to perform, yo
 ##Web App
 Until there is a permanently hosted version of the web app, you must run your own server. To create the database navigate to the TrestleWebApp folder and run `rake db:create db:migrate db:drop`.  Then run `rails server` to start the server.
 
+###Web Services
+There are a few web services that are available so that other applications can interact with the app. Currently, only the following web services are available
+####Perform Action
+This will cause the hardware to perform an action.
+```
+POST hardware_action/performAction.json 
+{station_identifier: "Station1", identifier: "ActionIdentifier", message: "Hello World"}
+```
+Sample Usage with Curl
+```
+curl -d "station_identifier=Station1&identifier=ActionIdentifier&message=Hello World" localhost:3000/hardware_action/performAction.json
+```
+Sample response
+```
+{"response":"ok","action":{
+	"created_at":"2012-08-27T14:28:02Z",
+	"description":"This action is cool",
+	"hardware_id":0,
+	"id":1,
+	"identifier":"ActionIdentifier",
+	"message":"Hello World",
+	"name":"My Action",
+	"pending":true,
+	"station_id":1,
+	"updated_at":"2012-08-28T17:55:08Z"}}
+```
+####Get State
+This will get the value of a state.
+```
+POST state/getState.json 
+{station_identifier: "Station1", identifier: "State1"}
+```
+An example using curl
+```
+curl -d "station_identifier=Station1&identifier=State1" localhost:3000/state/getState.json
+```
+The response will be
+```
+{"response":"ok","current_state":"StateValue","updated_at":"2012-08-28T17:59:58Z"}
+```
 
