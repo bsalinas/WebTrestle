@@ -15,12 +15,12 @@ Each variation of the Trestle library uses the same common commands but has a di
 ####Construction of the Trestle Object
 For SerialTrestle, construct a SerialTrestle object as follows
 ```c++
-SerialTrestle bridge("Station1", "192.168.1.18", 3000, &Serial);
+SerialTrestle bridge("Station1", "192.168.1.18", 4567, &Serial);
 ```
-In this case, Station1 is an identifier for the station, 192.168.1.18 is the web host, and 3000 is the port that it accepts communication over (Generally this will be 80, but the rails development configuration defaults to port 3000). `&Serial` provides a pointer to the Serial port that will be connected to the computer. This could be any of the standard hardware Serial ports or an insteance of a `SoftwareSerial` port.
+In this case, Station1 is an identifier for the station, 192.168.1.18 is the web host, and 4567 is the port that it accepts communication over (Generally this will be 80, but the rails development configuration defaults to port 3000). `&Serial` provides a pointer to the Serial port that will be connected to the computer. This could be any of the standard hardware Serial ports or an insteance of a `SoftwareSerial` port.
 For WiFlyHQTrestle, construct the Trestle object as follows
 ```c++
-WiFlyHQTrestle bridge("Station1", "192.168.1.18", 3000, &wifly);
+WiFlyHQTrestle bridge("Station1", "192.168.1.18", 4567, &wifly);
 ```
 The host and the port are the same in this example. `&wifly` is a pointer to the WiFlyHQ object.
 ####Communication Setup
