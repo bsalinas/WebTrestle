@@ -120,7 +120,7 @@ Each time you want the hardware to check if there is a new action to perform, yo
 
 
 ##Web App
-Until there is a permanently hosted version of the web app, you must run your own server. To create the database navigate to the TrestleWebApp folder and run `rake db:create db:migrate db:drop`.  Then run `rails server` to start the server.
+Until there is a permanently hosted version of the web app, you must run your own server. To create the database and run the app, navigate to the TrestleWebApp folder and run `ruby app.rb`. It is possible you will need to install some gems first.
 
 ###Web Services
 There are a few web services that are available so that other applications can interact with the app. Currently, only the following web services are available
