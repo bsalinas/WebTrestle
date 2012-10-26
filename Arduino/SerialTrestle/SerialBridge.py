@@ -1,9 +1,9 @@
 import serial, urllib
 #replace this with your serial device.
-ser = serial.Serial('/dev/tty.usbmodemfd131', 9600)
+# ser = serial.Serial('/dev/tty.usbmodemfd141', 9600)
 
 
-# ser = serial.Serial('/dev/tty.usbserial-A800I2RW', 9600)
+ser = serial.Serial('/dev/tty.usbserial-A800I2RW', 9600)
 siteStartChar = 0x04
 siteEndChar = 0x05
 postStartChar = 0x06

@@ -6,7 +6,7 @@
 
 SoftwareSerial debugSerial(9,8);
 WiFly wifly;
-WiFlyHQTrestle bridge("Station1", "192.168.1.18", 3000, &wifly);
+WiFlyHQTrestle bridge("Station1", "192.168.1.18", 4567, &wifly);
 
 /* Change these to match your WiFi network */
 const char mySSID[] = "MySSID";

@@ -8,7 +8,6 @@ require "sinatra-authentication"
 require 'json'
 use Rack::Session::Cookie, :secret => "heyhihello"
 set :server, :thin
-Sinatra::register Gon::Sinatra
 
 connections = []
 # Create our models
@@ -128,6 +127,7 @@ end
 
 post '/add_measurement/?' do
   content_type :json
+  puts params
   @station = find_station(params[:station_identifier])
   if !@station.nil?
     puts @station.id
@@ -140,16 +140,20 @@ post '/add_measurement/?' do
       @measurement.sensor_id = @sensor.id
       if @measurement.save
         puts connections
-        gon.measurements = Measurement.find(:sensor_id => @sensor.id)
+        # Measurement.find(:sensor_id => @sensor.id)
         connections.each do |out|
-         data = {:sensor_id => @measurement.sensor_id, :time => @measurement.created_at, :value => @measurement.value}.to_json
+         data = {:sensor_id => @measurement.sensor_id, :created_at => @measurement.created_at, :value => @measurement.value}.to_json
+         puts out
+         puts data
          out << "data: #{data}\nevent: measurement\n\n"
         end
         return { :response => 'ok'}.to_json
       else
+        puts "No measurment"
         return { :response => 'fail', :message => 'Couldn\'t create Measurement'}.to_json
       end
     else
+      puts "No Sensor"
       return {:response => 'fail', :message => 'Couldn\'t find Sensor'}.to_json
     end
   else
@@ -250,6 +254,7 @@ end
 
 post '/get_pending_actions/?' do
   content_type :json
+  puts params
   @station = find_station(params[:station_identifier])
   if !@station.nil?
     @action = HardwareAction.find(:pending => true, :station_id => @station.id)
@@ -259,14 +264,16 @@ post '/get_pending_actions/?' do
       @action.message = ""
       @action.save
       connections.each do |out|
-        data = {:action_identifier => @action.identifier}.to_json
+        data = {:action_id => @action.id, :action_identifier => @action.identifier}.to_json
         out << "data: #{data}\nevent: action_performed\n\n"
       end
       return { :response => 'ok', :action => @action.hardware_id.to_s, :message => message}.to_json
     else
+      puts "No Action"
       return { :response => 'ok', :action => "-1"}.to_json
     end
   else
+    puts "NoStation"
     return {:response => 'fail', :message => 'Couldn\'t find Station'}.to_json
   end
 end
@@ -292,13 +299,23 @@ post '/perform_action/?' do
     end
 end
 
+get '/get_measurements' do
+  content_type :json
+  @sensor = Sensor.find(:id=>params[:sensor_id])
+  if !@sensor.nil?
+    # @measurements = DB[:measurements].filter(:sensor_id => params[:sensor_id])
+    @measurements = []
+     Measurement.where(:sensor_id => params[:sensor_id]).each{|measure| @measurements<<measure.to_hash}
+    return { :response => 'ok', :measurements => @measurements}.to_json
+  else
+    return { :response => 'fail', :message => 'Couldn\'t find Sensor'}.to_json
+  end
+end 
+
 get '/stream', provides: 'text/event-stream' do
   stream :keep_open do |out|
     connections << out
     out.callback { connections.delete out }
-    out.errback do
-      logger.warn "lost connection"
-      connections.delete out
-    end
+
   end
 end

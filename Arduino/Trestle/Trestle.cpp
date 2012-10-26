@@ -2,8 +2,8 @@
 
 int Trestle::registerStation(char* name, char* description, boolean override){
 	strcpy_P(_buffer, (char*)register_string); 
-	sprintf(_lastResponse, _buffer, name, description, override ? "true" : "false", _stationIdentifier);
-	if(makePost("/stations/register.json", _lastResponse)){
+	sprintf(_lastResponse, _buffer, name, description, _stationIdentifier);
+	if(makePost("/register_station", _lastResponse)){
 		return evaluateResponse();
 	}
 	return STATUS_POST_ERROR;
@@ -12,7 +12,7 @@ int Trestle::addSensor(char* identifier, char* name, char* description, char* un
 	strcpy_P(_buffer, (char*)add_sensor_string); 
 	sprintf(_lastResponse, _buffer, name, description, _stationIdentifier, identifier, units);
 
-	if(makePost("/sensor/add.json", _lastResponse)){
+	if(makePost("/add_sensor", _lastResponse)){
 
 		return evaluateResponse();
 	}
@@ -21,7 +21,7 @@ int Trestle::addSensor(char* identifier, char* name, char* description, char* un
 int Trestle::sendSensorData(char* sensor_identifier, int value, int multiplier){
 	strcpy_P(_buffer, (char*)send_sensor_string); 
 	sprintf(_lastResponse, _buffer, _stationIdentifier, sensor_identifier,value, multiplier);
-	if(makePost("/measurement/add.json", _lastResponse)){
+	if(makePost("/add_measurement", _lastResponse)){
 		return evaluateResponse();
 	}
 	return STATUS_POST_ERROR;
@@ -44,7 +44,7 @@ int Trestle::registerAction(char* identifier, char* name, char* description, Act
 	if(_biggestAction < NActions){
 		strcpy_P(_buffer, (char*)register_action_string); 
 		sprintf(_lastResponse, _buffer, _stationIdentifier, identifier,name, description, _biggestAction);
-		if(makePost("/hardware_action/add.json", _lastResponse)){
+		if(makePost("/add_action", _lastResponse)){
 			int resp =  evaluateResponse();
 			if(resp == STATUS_SUCCESS){
 				_functions[_biggestAction] = func;
@@ -60,7 +60,7 @@ int Trestle::addState(char* identifier, char* name, char* description){
 	strcpy_P(_buffer, (char*)add_state_string); 
 	sprintf(_lastResponse, _buffer, _stationIdentifier, identifier, name, description);
 
-	if(makePost("/state/add.json", _lastResponse)){
+	if(makePost("/add_state", _lastResponse)){
 
 		return evaluateResponse();
 	}
@@ -71,7 +71,7 @@ int Trestle::setStateValue(char* identifier, char* value){
 	strcpy_P(_buffer, (char*)set_state_string); 
 	sprintf(_lastResponse, _buffer, _stationIdentifier, identifier, value);
 
-	if(makePost("/state/setState.json", _lastResponse)){
+	if(makePost("/set_state", _lastResponse)){
 
 		return evaluateResponse();
 	}
@@ -80,7 +80,7 @@ int Trestle::setStateValue(char* identifier, char* value){
 
 int Trestle::tick(){
 	sprintf(_lastResponse, "station_identifier=%s", _stationIdentifier);
-	if(makePost("/hardware_action/getPending.json", _lastResponse)){
+	if(makePost("/get_pending_actions", _lastResponse)){
 		int resp = evaluateResponse();
 		if(resp == STATUS_SUCCESS){
 			char* pch = strstr (_lastResponse,"\"action\":\"");	

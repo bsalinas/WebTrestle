@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include <avr/pgmspace.h>
 
-	const char register_string[] PROGMEM = "name=%s&description=%s&override=%s&identifier=%s";   // "String 0" etc are strings to store - change to suit.
+	const char register_string[] PROGMEM = "name=%s&description=%s&identifier=%s";   // "String 0" etc are strings to store - change to suit.
 	const char add_sensor_string[] PROGMEM = "name=%s&description=%s&station_identifier=%s&identifier=%s&units=%s";
 	const char send_sensor_string[] PROGMEM = "station_identifier=%s&sensor_identifier=%s&value=%i&multiplier=%i";
 	const char register_action_string[] PROGMEM = "station_identifier=%s&identifier=%s&name=%s&description=%s&hardware_id=%i";

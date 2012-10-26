@@ -12,7 +12,7 @@ boolean WiFlyHQTrestle::makePost(char* request, char* data){
 	if(_wifly-> isConnected()){
 		_wifly->close();
 	}
-	if (_wifly->open(_site, 3000)) {
+	if (_wifly->open(_site, _port)) {
 		_wifly->print("POST ");
 		_wifly->print(request);
 		_wifly->println(" HTTP/1.1");
@@ -21,8 +21,7 @@ boolean WiFlyHQTrestle::makePost(char* request, char* data){
 		_wifly->print("Content-Length: ");
 		_wifly->println(strlen(data));
 		_wifly->println();
-		_wifly->println(data);
-		_wifly->println();
+		_wifly->print(data);
 		return waitForResponse();
   	}
   return false;

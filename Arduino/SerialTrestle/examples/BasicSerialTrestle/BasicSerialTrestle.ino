@@ -5,7 +5,7 @@
 #include <Trestle.h>
 #include <SerialTrestle.h>
 
-SerialTrestle bridge("Station1", "192.168.1.18", 3000, &Serial);
+SerialTrestle bridge("Station1", "192.168.1.18", 4567, &Serial);
 
 long lastTime = 0;
 
