@@ -15,12 +15,12 @@ Each variation of the Trestle library uses the same common commands but has a di
 ####Construction of the Trestle Object
 For SerialTrestle, construct a SerialTrestle object as follows
 ```c++
-SerialTrestle bridge("Station1", "192.168.1.18", 3000, &Serial);
+SerialTrestle bridge("Station1", "192.168.1.18", 4567, &Serial);
 ```
-In this case, Station1 is an identifier for the station, 192.168.1.18 is the web host, and 3000 is the port that it accepts communication over (Generally this will be 80, but the rails development configuration defaults to port 3000). `&Serial` provides a pointer to the Serial port that will be connected to the computer. This could be any of the standard hardware Serial ports or an insteance of a `SoftwareSerial` port.
+In this case, Station1 is an identifier for the station, 192.168.1.18 is the web host, and 4567 is the port that it accepts communication over (Generally this will be 80, but the rails development configuration defaults to port 3000). `&Serial` provides a pointer to the Serial port that will be connected to the computer. This could be any of the standard hardware Serial ports or an insteance of a `SoftwareSerial` port.
 For WiFlyHQTrestle, construct the Trestle object as follows
 ```c++
-WiFlyHQTrestle bridge("Station1", "192.168.1.18", 3000, &wifly);
+WiFlyHQTrestle bridge("Station1", "192.168.1.18", 4567, &wifly);
 ```
 The host and the port are the same in this example. `&wifly` is a pointer to the WiFlyHQ object.
 ####Communication Setup
@@ -120,43 +120,33 @@ Each time you want the hardware to check if there is a new action to perform, yo
 
 
 ##Web App
-Until there is a permanently hosted version of the web app, you must run your own server. To create the database navigate to the TrestleWebApp folder and run `rake db:create db:migrate db:drop`.  Then run `rails server` to start the server.
+Until there is a permanently hosted version of the web app, you must run your own server. To create the database and run the app, navigate to the TrestleWebApp folder and run `ruby app.rb`. It is possible you will need to install some gems first.
 
 ###Web Services
 There are a few web services that are available so that other applications can interact with the app. Currently, only the following web services are available
 ####Perform Action
 This will cause the hardware to perform an action.
 ```
-POST hardware_action/performAction.json 
+POST perform_action 
 {station_identifier: "Station1", identifier: "ActionIdentifier", message: "Hello World"}
 ```
 Sample Usage with Curl
 ```
-curl -d "station_identifier=Station1&identifier=ActionIdentifier&message=Hello World" localhost:3000/hardware_action/performAction.json
+curl -d "station_identifier=Station1&identifier=ActionIdentifier&message=Hello World" localhost:4567/perform_action
 ```
 Sample response
 ```
-{"response":"ok","action":{
-	"created_at":"2012-08-27T14:28:02Z",
-	"description":"This action is cool",
-	"hardware_id":0,
-	"id":1,
-	"identifier":"ActionIdentifier",
-	"message":"Hello World",
-	"name":"My Action",
-	"pending":true,
-	"station_id":1,
-	"updated_at":"2012-08-28T17:55:08Z"}}
+{"response":"ok"}
 ```
 ####Get State
 This will get the value of a state.
 ```
-POST state/getState.json 
+GET get_state
 {station_identifier: "Station1", identifier: "State1"}
 ```
 An example using curl
 ```
-curl -d "station_identifier=Station1&identifier=State1" localhost:3000/state/getState.json
+curl "localhost:4567/get_state?station_identifier=Station1&identifier=State1"
 ```
 The response will be
 ```
