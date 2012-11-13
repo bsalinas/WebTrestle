@@ -27,8 +27,13 @@ boolean WiFlyHQTrestle::makePost(char* request, char* data){
   return false;
 }
 boolean WiFlyHQTrestle::waitForResponse(){
-
+	long starttime = millis();
+	long now = millis();
 	while(_wifly->available() <=0 ){
+		now = millis();
+		if((now - starttime) > 10000){
+			return false;
+		}
 		delay(10);
 	}
 	int i=0;
