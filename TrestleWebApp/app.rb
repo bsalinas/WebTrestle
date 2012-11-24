@@ -2,7 +2,6 @@ require 'rubygems'
 require 'sinatra'
 require 'haml'
 require_relative 'config/init.rb'
-require "sinatra-authentication"
 require 'json'
 use Rack::Session::Cookie, :secret => "heyhihello"
 set :server, :thin
@@ -55,7 +54,7 @@ def find_station(identifier)
 end
 
 get '/' do
-  render_login_logout
+  "<h1>Hello World</h1>"
 end
 
 get("/stations/:identifier") do

@@ -6,3 +6,38 @@ task :spec do
     t.spec_files = FileList['spec/**/*_spec.rb']
   end
 end
+
+namespace :db do
+  require "sequel"
+  namespace :migrate do
+    Sequel.extension :migration
+    DB = Sequel.connect('postgres://vetknwqblbajbl:-H5C4uo7Xz-8_v1TIb9UjSY1tJ@ec2-23-21-209-58.compute-1.amazonaws.com:5432/deia1866o0if4h')
+
+    desc "Perform migration reset (full erase and migration up)"
+    task :reset do
+      Sequel::Migrator.run(DB, "migrations", :target => 0)
+      Sequel::Migrator.run(DB, "migrations")
+      puts "<= sq:migrate:reset executed"
+    end
+
+    desc "Perform migration up/down to VERSION"
+    task :to do
+      version = ENV['VERSION'].to_i
+      raise "No VERSION was provided" if version.nil?
+      Sequel::Migrator.run(DB, "migrations", :target => version)
+      puts "<= sq:migrate:to version=[#{version}] executed"
+    end
+
+    desc "Perform migration up to latest migration available"
+    task :up do
+      Sequel::Migrator.run(DB, "migrations")
+      puts "<= sq:migrate:up executed"
+    end
+
+    desc "Perform migration down (erase all data)"
+    task :down do
+      Sequel::Migrator.run(DB, "migrations", :target => 0)
+      puts "<= sq:migrate:down executed"
+    end
+  end
+end

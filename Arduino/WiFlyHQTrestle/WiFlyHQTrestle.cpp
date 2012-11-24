@@ -18,6 +18,8 @@ boolean WiFlyHQTrestle::makePost(char* request, char* data){
 		_wifly->println(" HTTP/1.1");
 		_wifly->println("Content-Type: application/x-www-form-urlencoded");
 		_wifly->println("Connection: close");
+		_wifly->print("Host: ");
+		_wifly->println(_site);
 		_wifly->print("Content-Length: ");
 		_wifly->println(strlen(data));
 		_wifly->println();
@@ -44,7 +46,7 @@ boolean WiFlyHQTrestle::waitForResponse(){
 		if(_wifly->available() > 0){
 			char c = char(_wifly -> read());
 			//Wait until we get to the JSON bits.
-			// Serial.print(c);
+			Serial.print(c);
 			if(c == '{'){
 				waitingForJSON = false;
 			}
