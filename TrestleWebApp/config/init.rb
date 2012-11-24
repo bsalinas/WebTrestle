@@ -1,13 +1,21 @@
 require 'sinatra/sequel'
-require 'sqlite3'
+#require 'sinatra'
+require 'sequel'
+require 'pg'
 
 configure :development do
-  set :database, 'sqlite://tmp/development.sqlite'
-  DB = database
+  #set :database, 'sqlite://tmp/development.sqlite'
+# DB = Sequel.connect(ENV['HEROKU_POSTGRESQL_AMBER_URL'] || 'postgres://localhost/mydb')
+set :database , Sequel.connect('postgres://vetknwqblbajbl:-H5C4uo7Xz-8_v1TIb9UjSY1tJ@ec2-23-21-209-58.compute-1.amazonaws.com:5432/deia1866o0if4h')
+DB = database
 end
 
 configure :test do
-  set :database, 'sqlite3::memory:'
+ # set :database, 'sqlite3::memory:'
+end
+configure :production do 
+  puts ENV
+  DB = Sequel.connect(ENV['DATABASE_URL'] || 'postgres://localhost/mydb')
 end
 
 require_relative 'migrations.rb'

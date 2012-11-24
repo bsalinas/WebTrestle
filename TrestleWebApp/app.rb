@@ -1,7 +1,5 @@
 require 'rubygems'
 require 'sinatra'
-require 'sinatra/flash'
-require 'gon-sinatra'
 require 'haml'
 require_relative 'config/init.rb'
 require "sinatra-authentication"

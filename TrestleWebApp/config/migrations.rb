@@ -4,13 +4,9 @@
 # For details on sequel's schema modifications, check out:
 # http://sequel.rubyforge.org/rdoc/files/doc/schema_rdoc.html
 
-migration "create the people table" do
-  database.create_table :people do
-    primary_key :id 
-    string      :name
-  end
-end
+
 migration "create stations" do
+  puts "I am here"
   database.create_table :stations do
     primary_key :id
     string      :name
