@@ -62,7 +62,7 @@ Sequel.migration do
     end
   end
   down do
-    drop_table(:stations, :actions, :accounts, :users, :cascade=>true)
+    drop_table(:stations, :hardware_actions, :states, :measurements, :sensors, :cascade=>true)
   end
 end
 
