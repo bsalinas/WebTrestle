@@ -1,5 +1,25 @@
 $(document).ready(function() {
-	var source = new EventSource('/stream');
+	var source;
+	if(typeof(EventSource)!=="undefined"){
+	  	source = new EventSource('/stream');
+	  	source.addEventListener('measurement', addMeasurement, false);
+		source.addEventListener('state', changeState, false);
+		source.addEventListener('action_performed', performedAction, false);
+		source.addEventListener('open', function(e) {
+		  // Connection was opened.
+		  console.log("open");
+		}, false);
+		source.addEventListener('error', function(e) {
+			if (e.readyState == EventSource.CLOSED) {
+			// Connection was closed
+			console.log("Closed");
+			}
+		}, false);
+	  }
+	else{
+	  // Sorry! No server-sent events support..
+	  }
+	
 	var station_identifier = $('h1').attr("data-station_identifier");
 	var sensor_data ={};
 	var sensor_chart = {};
@@ -77,19 +97,7 @@ $(document).ready(function() {
 
 	
 
-	source.addEventListener('measurement', addMeasurement, false);
-	source.addEventListener('state', changeState, false);
-	source.addEventListener('action_performed', performedAction, false);
-	source.addEventListener('open', function(e) {
-	  // Connection was opened.
-	  console.log("open");
-	}, false);
-	source.addEventListener('error', function(e) {
-		if (e.readyState == EventSource.CLOSED) {
-		// Connection was closed
-		console.log("Closed");
-		}
-	}, false);
+	
 
 	//Now, setup the action buttons
 	$('.action_button').each(function(){
