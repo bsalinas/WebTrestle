@@ -144,7 +144,9 @@ $(document).ready(function() {
  function generateData(sensor_id){
 	var data = [];
 	for(var point in sensor_data[sensor_id].data){
-		data.push({x: Date.parse(sensor_data[sensor_id].data[point].created_at), y: parseFloat(sensor_data[sensor_id].data[point].value), size: 50});
+		var arr = sensor_data[sensor_id].data[point].created_at.split(/[- :]/);
+   		var date = new Date(arr[0], arr[1]-1, arr[2], arr[3], arr[4], arr[5]);
+		data.push({x: date, y: parseFloat(sensor_data[sensor_id].data[point].value), size: 50});
 	}
 	return [
 	{
