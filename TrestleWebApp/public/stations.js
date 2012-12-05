@@ -50,7 +50,7 @@ $(document).ready(function() {
 	drawChart = function(sensor_id){
 		var svg_selector = '.chart#sensor_chart_'+sensor_id+' svg';
 		nv.addGraph(function() {
-			var chart = nv.models.scatterChart();
+			var chart = nv.models.lineWithFocusChart();
 		    chart.xAxis
 		        .axisLabel('Time')
 		        .tickFormat(function(d){
@@ -142,7 +142,7 @@ $(document).ready(function() {
 	{
 		values : data,
 		key : "Label",
-		color: 'ff7f0e'
+		color: '3A87AD'
 
 	}];
  }

@@ -10,9 +10,13 @@ div.state_display div{
 	width: 50px;
 
 }
-div.chart{
+/*div.chart{
 	width:100%;
 	height: 400px;
+}*/
+
+.thumbnails > li{
+	margin-left:0;
 }
 
 .sidepanel{
