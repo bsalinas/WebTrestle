@@ -1,8 +1,10 @@
 $(document).ready(function() {
+	//The EventSource variable.
 	var source;
+	//Setup the eventsource if it exists.
 	if(typeof(EventSource)!=="undefined"){
-	  	source = new EventSource('/stream');
-	  	source.addEventListener('measurement', addMeasurement, false);
+	 	source = new EventSource('/stream');
+	 	source.addEventListener('measurement', addMeasurement, false);
 		source.addEventListener('state', changeState, false);
 		source.addEventListener('action_performed', performedAction, false);
 		source.addEventListener('open', function(e) {
@@ -20,11 +22,15 @@ $(document).ready(function() {
 	  // Sorry! No server-sent events support..
 	  }
 	
-	var station_identifier = $('h1').attr("data-station_identifier");
-	var sensor_data ={};
-	var sensor_chart = {};
+	//Grep the Station Identifier from the header element.
+	var station_identifier = $('h1').attr("data-station_identifier"),
+	//Initialize the sensor_data object
+	sensor_data ={},
+	//Initialize the arrays of charts
+	sensor_chart = {};
 
-
+	//Called when a new measurement is added to a sensor.
+	//Called from the EventStream for measurement
 	var addMeasurement = function(e){
 		var data = e.data;
 		if(typeof data === 'string'){
@@ -36,18 +42,22 @@ $(document).ready(function() {
 			}
 			sensor_data[data.sensor_id].data.push({value:data.value, created_at:data.created_at});
 			$('#sensor_table_'+data.sensor_id+' tbody').append('<tr><td>'+data.value+'</td><td>'+data.created_at+'</td></tr>');
+			$('#badge_sensor_'+data.sensor_id).text(parseInt($('#badge_sensor_'+data.sensor_id).text())||0 + 1).show();
 			if(e.type === "measurement"){
 				drawChart(data.sensor_id);
 			}
 		}
 	},
+	//Called when a state is changed by the EventStream
 	changeState = function(e){
 		console.log(e);
 		var data = JSON.parse(e.data);
 		if(data.state_id && data.time){
 			$('#state_id_'+data.state_id+' div').html(data.value);
+			$('#badge_state_'+data.state_id).text("Updated").show();
 		}
 	},
+	//Called when an action is performed by the Arduino
 	performedAction = function(e){
 		var data = JSON.parse(e.data);
 		if(data.action_identifier){
@@ -55,6 +65,7 @@ $(document).ready(function() {
 			$('#badge_action_'+data.action_id).text("Performed");
 		}
 	},
+	//Makes an ajax request to get all the measurements for the specified sensor and draws the chart
 	getInitialMeasurements = function(sensorid){
 			//Get the initial data
 		$.ajax({type: "GET",
@@ -67,6 +78,21 @@ $(document).ready(function() {
 			sensor_chart[sensorid] = drawChart(sensorid);
 		});
 	},
+	generateData = function(sensor_id){
+		var data = [];
+		for(var point in sensor_data[sensor_id].data){
+			var arr = sensor_data[sensor_id].data[point].created_at.split(/[- :]/);
+	   		var date = new Date(arr[0], arr[1]-1, arr[2], arr[3], arr[4], arr[5]);
+			data.push({x: date, y: parseFloat(sensor_data[sensor_id].data[point].value), size: 50});
+		}
+		return [
+		{
+			values : data,
+			key : "Label",
+			color: '3A87AD'
+		}];
+	 },
+	//Draws the chart for the specified sensor_id
 	drawChart = function(sensor_id){
 		var svg_selector = '.chart#sensor_chart_'+sensor_id+' svg';
 		nv.addGraph(function() {
@@ -88,18 +114,16 @@ $(document).ready(function() {
 		     return chart;
 	   });
 	};
-
+	//Gets the initial measurements based on the stubbed out initial page.
 	$('.sensor_header').each(function(){
 		var sensor_id = $(this).attr('data-sensor_id');
 		getInitialMeasurements(sensor_id);
 
 	});
 
-	
-
-	
-
 	//Now, setup the action buttons
+	//When the button is pressed, we need to send an AJAX request to /perform_action
+	//Also, change the badge on the navigation.
 	$('.action_button').each(function(){
 		$(this).click(function(e){
 			e.preventDefault();
@@ -109,51 +133,20 @@ $(document).ready(function() {
 				data : { identifier : action_identifier, station_identifier: station_identifier}
 			}).done(function(msg){
 				$('#action_display_'+action_identifier).text("Pending as of "+(new Date()));
-				$('#badge_action_'+action_id).text("Pending");
+				$('#badge_action_'+action_id).text("Pending").show();
 			});
 
 		});
 	});
 
+	//Handles the switching of tabs.
 	$('.nav-tabs a').click(function(e){
 		e.preventDefault();
 		$(this).tab('show');
 	});
 
-
-
-// 		 $('.sensor_table').dataTable({
-// 			"sPaginationType": "bootstrap",
-// 			"sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
-// 			"bFilter": false, // Disable searching
-// 			"bPaginate": true, // Enable pagination
-// 			"bInfo": true,    // Enable info texts,
-// 			"bSort": false,
-// 			"iDisplayLength": 100
-// 			} );
-		// $('body').scrollspy({target:"#navigation"});
-		// $('body').scrollspy("refresh");
-
- 
- 
- 
- /**************************************
-  * Simple test data generator
-  */
- 
- function generateData(sensor_id){
-	var data = [];
-	for(var point in sensor_data[sensor_id].data){
-		var arr = sensor_data[sensor_id].data[point].created_at.split(/[- :]/);
-   		var date = new Date(arr[0], arr[1]-1, arr[2], arr[3], arr[4], arr[5]);
-		data.push({x: date, y: parseFloat(sensor_data[sensor_id].data[point].value), size: 50});
-	}
-	return [
-	{
-		values : data,
-		key : "Label",
-		color: '3A87AD'
-
-	}];
- }
+	//When you scroll over a new data badge, hide it.
+	$('[data-spy="scroll"]').on('activate', function(e){
+		$(e.target).find('.badge').text('').hide();
+	});
 });

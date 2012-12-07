@@ -1,31 +1,20 @@
 %head
-	%script{:src=> "https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"}
-
-	%script{:src=>"/lib/bootstrap/js/bootstrap.js"}
 	%script{:src => "/stations.js"}
 	%script{:src => "/d3.v2.js"}
 	%script{:src => "/nv.d3.min.js"}
-	/ %script{:src => "http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"}
-	/ %script{:src=> "/lib/datatables/datatables.pagination.js"}
-	%link(rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css")
-	%link(href="/lib/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet")
-	%link(type="text/css" href="/jquery-ui-1.8.23.custom.css" rel="stylesheet")
-	%link(rel="stylesheet" href="/app.css")
 	%link(rel="stylesheet" href="/nv.d3.css")
-	%link(rel="stylesheet" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css")
-	%meta{:name=>"viewport",:content=>"width=device-width,initial-scale=1.0"}
 	
 %body{:data=>{:spy=>"scroll", :target=>"#navigation"}}
 	.container-fluid
 		.row-fluid
-			.span14
+			.span12
 				.page-header
 					%h1{:data=>{:station_identifier => "#{@station.identifier}"}}
 						My Station Name
 						%small
 							=@station.description
 		.row-fluid
-			.span2.navpanel.affix.hidden-phone
+			.span3.navpanel.affix.hidden-phone
 				#navigation
 					%ul.nav.nav-list
 						-if !@station.state.empty?
@@ -36,7 +25,7 @@
 								%li
 									%a{:id=>"state_nav_#{state.id}", :href=>"#state_id_#{state.id}"}
 										=state.name
-										%span.badge.badge-info
+										%span.badge.badge-info{:id=>"badge_state_#{state.id}"}
 											Updated
 						-if !@station.hardware_action.empty?
 							%li.nav-header
@@ -55,18 +44,18 @@
 								%li
 									%a{:id=>"sensor_nav_#{sensor.id}", :href=>"#sensor_header_#{sensor.id}"}
 										=sensor.name
-										%span.badge.badge-info
+										%span.badge.badge-info{:id=>"badge_sensor_#{sensor.id}"}
 		.row-fluid					
-			.span2.hidden-phone
-			.span10.content#maincontent{:data=>{:spy=>"scroll", :target=>"#navigation"}}
+			.span3.hidden-phone
+			.span9.content#maincontent{:data=>{:spy=>"scroll", :target=>"#navigation"}}
 				#states
 					-if !@station.state.empty?
-						%h2 States
+						%h3 States
 						%ul.thumbnails
 							-@station.state.each do |state|
 								%li
 									.thumbnail.state_display{:id=> "state_id_#{state.id}", :title=>"#{state.description}"}
-										%h3
+										%h4
 											="#{state.name}"
 										%p
 											=state.description
@@ -74,7 +63,7 @@
 											=state.current_state
 				#actions
 					-if !@station.hardware_action.empty?
-						%h2 Actions
+						%h3 Actions
 						%ul.thumbnails
 							-@station.hardware_action.each do |action|
 								%li.thumbnail{:id=>"action_id_#{action.id}"}
@@ -88,10 +77,10 @@
 									%p.action_display{:id => "action_display_#{action.identifier}"}
 				#sensors
 					-if !@station.sensor.empty?
-						%h2 Sensors
+						%h3 Sensors
 						-@station.sensor.each do |sensor|
-							%h3.sensor_header{:id=>"sensor_header_#{sensor.id}", :data=>{:sensor_id=>"#{sensor.id}"}}= sensor.name
-							%h4= sensor.description	
+							%h4.sensor_header{:id=>"sensor_header_#{sensor.id}", :data=>{:sensor_id=>"#{sensor.id}"}}= sensor.name
+							%h5= sensor.description	
 							%ul.nav.nav-tabs
 								%li.active.tab
 									%a{:href=>"#sensor_chart_#{sensor.id}", :data=>{:toggle => "tab"}}
