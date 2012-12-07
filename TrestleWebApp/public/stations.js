@@ -41,7 +41,7 @@ $(document).ready(function() {
 				sensor_data[data.sensor_id]={data: []};
 			}
 			sensor_data[data.sensor_id].data.push({value:data.value, created_at:data.created_at});
-			$('#sensor_table_'+data.sensor_id+' tbody').append('<tr><td>'+data.value+'</td><td>'+data.created_at+'</td></tr>');
+			$('#sensor_table_'+data.sensor_id+' tbody').append('<tr><td>'+parseFloat(data.value)+'</td><td>'+data.created_at+'</td></tr>');
 			if(e.type === "measurement"){
 				drawChart(data.sensor_id);
 			}
