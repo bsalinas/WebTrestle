@@ -42,7 +42,6 @@ $(document).ready(function() {
 			}
 			sensor_data[data.sensor_id].data.push({value:data.value, created_at:data.created_at});
 			$('#sensor_table_'+data.sensor_id+' tbody').append('<tr><td>'+data.value+'</td><td>'+data.created_at+'</td></tr>');
-			$('#badge_sensor_'+data.sensor_id).text(parseInt($('#badge_sensor_'+data.sensor_id).text())||0 + 1).show();
 			if(e.type === "measurement"){
 				drawChart(data.sensor_id);
 			}
@@ -82,7 +81,7 @@ $(document).ready(function() {
 		var data = [];
 		for(var point in sensor_data[sensor_id].data){
 			var arr = sensor_data[sensor_id].data[point].created_at.split(/[- :]/);
-	   		var date = new Date(arr[0], arr[1]-1, arr[2], arr[3], arr[4], arr[5]);
+			var date = new Date(arr[0], arr[1]-1, arr[2], arr[3], arr[4], arr[5]);
 			data.push({x: date, y: parseFloat(sensor_data[sensor_id].data[point].value), size: 50});
 		}
 		return [
@@ -94,6 +93,14 @@ $(document).ready(function() {
 	 },
 	//Draws the chart for the specified sensor_id
 	drawChart = function(sensor_id){
+		//First, let's update the CSV
+		$('#badge_sensor_'+sensor_id).text(parseInt($('#badge_sensor_'+sensor_id).text())||0 + 1).show();
+		$('a#download_link_'+sensor_id).attr('href',createDownloadHref(sensor_id));
+		var now = new Date();
+		var formattedDate = (now.getMonth()+1)+'-'+now.getDate()+'-'+now.getFullYear()+'_'+now.getHours()+':'+now.getMinutes();
+		$('a#download_link_'+sensor_id).attr('download',$('a#download_link_'+sensor_id).attr('data-name')+"_"+formattedDate+'.csv');
+
+
 		var svg_selector = '.chart#sensor_chart_'+sensor_id+' svg';
 		nv.addGraph(function() {
 			var chart = nv.models.lineWithFocusChart();
@@ -113,6 +120,16 @@ $(document).ready(function() {
 		       nv.utils.windowResize(function() { d3.select(svg_selector).call(chart);});
 		     return chart;
 	   });
+	},
+	//text = the file content, name = the name of the file
+	//Watch out for odd characters like '-' or other things... it chokes.
+	createDownloadHref = function(sensor_id){
+		var text = "Time,Value\n";
+		for( var point in sensor_data[sensor_id].data){
+			text= text+'"'+sensor_data[sensor_id].data[point].created_at+'","'+sensor_data[sensor_id].data[point].value+'"\n';
+		}
+		var html = 'data:application/octet-stream;base64,'+window.btoa(text);
+		return html;
 	};
 	//Gets the initial measurements based on the stubbed out initial page.
 	$('.sensor_header').each(function(){

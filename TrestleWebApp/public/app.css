@@ -15,6 +15,10 @@ div.state_display div{
 	height: 400px;
 }*/
 
+.tabsForSensor{
+	margin-top:15px;
+}
+
 .thumbnails > li{
 	margin-left:0;
 }

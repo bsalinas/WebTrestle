@@ -79,9 +79,12 @@
 					-if !@station.sensor.empty?
 						%h3 Sensors
 						-@station.sensor.each do |sensor|
-							%h4.sensor_header{:id=>"sensor_header_#{sensor.id}", :data=>{:sensor_id=>"#{sensor.id}"}}= sensor.name
+							%h4.sensor_header{:id=>"sensor_header_#{sensor.id}", :data=>{:sensor_id=>"#{sensor.id}"}}=sensor.name
 							%h5= sensor.description	
-							%ul.nav.nav-tabs
+							%a.btn.btn-primary{:id=>"download_link_#{sensor.id}", :data=>{:name=>"#{sensor.name}"}, :href=>"#"}
+								%i.icon.icon-file.icon-white
+								Download Data
+							%ul.nav.nav-tabs.tabsForSensor
 								%li.active.tab
 									%a{:href=>"#sensor_chart_#{sensor.id}", :data=>{:toggle => "tab"}}
 										Chart
