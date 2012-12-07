@@ -1,16 +1,26 @@
-%h1 Stations
-%table.table-striped
-	%thead
-		%tr
-			%th Name
-			%th Description
-			%th Key
-	%tbody
-		-@stations.each do |s|
+.container-fluid
+	%h1 All Stations
+	-if !@warning_state.nil?
+		.row-fluid
+			.alert.alert-error
+				%button.close{:type=>"button", :data=>{:dismiss=>"alert"}}
+					x
+				%p
+					%i.icon.icon-warning-sign
+					="There aren't any stations with an identifier of #{@attemptedIdentifier}. Maybe you mispelled it or it hasn't been set up yet?"
+	%table.table-striped.table
+		%thead
 			%tr
-				%td=s.name
-				%td=s.description
-				%td=s.identifier
+				%th Name
+				%th Description
+				%th Station Identifier
+		%tbody
+			-@stations.each do |s|
+				%tr
+					%td
+						%a{:href=>"/stations/#{s.identifier}"}=s.name
+					%td=s.description
+					%td=s.identifier
 
 
 

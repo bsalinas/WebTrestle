@@ -62,10 +62,20 @@ get("/stations/:identifier") do
     @station = Station.find(params[:id])
   else
     @station = find_station(params[:identifier])
-    end
+  end
+  if @station.nil?
+    @warning_state = true
+    @attemptedIdentifier = params[:identifier]
+    @stations = Station.all
+    haml :view_all_stations
+  else
     haml :view_station
+  end
 end
-
+get("/stations/") do
+  @stations = Station.all
+  haml :view_all_stations
+end
 get("/stations") do
   @stations = Station.all
   haml :view_all_stations
